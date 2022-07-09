@@ -1,0 +1,27 @@
+.container{
+    margin-left: auto;
+    margin-right: auto;
+    max-width: $main-width;
+    padding-left: $gap;
+    padding-right: $gap;
+    width: 100%;
+}
+
+%container{
+    max-width: $main-width;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: $gap;
+    padding-right: $gap;
+    width: 100%;
+}
+
+.def-title{
+    font-size: rem(24);
+    @include point-md{
+        font-size: rem(32);
+    }
+    @include point-lg{
+        font-size: rem(40);
+    }
+}

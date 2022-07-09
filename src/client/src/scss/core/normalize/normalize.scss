@@ -1,0 +1,93 @@
+*, *:before, *:after{
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html{
+  font-size: 16px;
+  line-height: 1.5;
+}
+body{
+  margin: 0px auto;
+}
+ul {
+  margin: 0; /* Отступ слева в браузере IE и Opera */
+  padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+  li {
+    list-style-type: none; /* Убираем маркеры */
+  }
+}
+
+//form element
+select, input, textarea{
+  outline: none;
+}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  &:hover{
+    cursor: pointer;
+  }
+}
+textarea{
+  resize: none;
+}
+input[type="button"]:active,
+input[type="submit"]:active{
+  outline: none;
+  border-color: inherit;
+}
+input[type="button"]:focus,
+input[type="submit"]:focus{
+  box-shadow: none;
+  border-style: solid;
+}
+input[type=search]::-ms-clear, input[type=search]::-ms-reveal {
+  display: none;
+}
+button{
+  border: none;
+  user-select: none;
+  padding: 0;
+  &:hover{
+    cursor: pointer;
+  }
+}
+button:active, button:focus {
+  outline: none;
+  border-style: none;
+}
+button::-moz-focus-inner, select::-moz-focus-inner {
+  border: 0px;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]:hover,
+input[type="number"]:focus {
+  -moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+//def-text
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0px;
+}
+p{
+  margin: 0px;
+}
+a:active,
+a:hover,
+a {
+  text-decoration: none;
+  color: inherit;
+  word-break: break-word;
+}
+a:focus{
+  outline: none;
+}

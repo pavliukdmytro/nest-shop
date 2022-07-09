@@ -1,0 +1,33 @@
+/* Short media */
+// < 0px
+@mixin point{
+    @media only screen and (min-width: $grid) {
+        @content;
+    }
+}
+// < 576px
+@mixin point-sm{
+    @media only screen and (min-width: $grid-sm) {
+        @content;
+    }
+}
+
+// < 768px
+@mixin point-md{
+    @media only screen and (min-width: $grid-md) {
+        @content;
+    }
+}
+
+// < 992px
+@mixin point-lg{
+    @media only screen and (min-width: $grid-lg) {
+        @content;
+    }
+}
+// < 1200px
+@mixin point-xl{
+    @media only screen and (min-width: $grid-xl) {
+        @content;
+    }
+}
