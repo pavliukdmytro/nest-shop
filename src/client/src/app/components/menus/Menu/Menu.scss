@@ -1,0 +1,9 @@
+.menu{
+  .nav-link{
+    //border: 1px solid black;
+  }
+  .active{
+    color: var(--bs-indigo);
+    border-bottom: 1px solid black;
+  }
+}

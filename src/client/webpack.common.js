@@ -25,7 +25,7 @@ function getAllHbsRootFiles() {
 module.exports = {
     entry: {
         /** точка входа **/
-        app: './src/index.ts',
+        app: './src/index.tsx',
     },
     output: {
         /** вывод **/
@@ -98,5 +98,8 @@ module.exports = {
     ],
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.jsx'],
+        alias: {
+            '@components': path.join(__dirname, 'src/app/components')
+        }
     }
 };

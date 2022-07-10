@@ -4,9 +4,18 @@
     "outDir": "./dist/",
     "noImplicitAny": true,
     "module": "esnext",
-    "target": "es5",
+    "target": "es6",
     "jsx": "react-jsx",
     "allowJs": true,
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "@components/*": ["src/app/components/*"]
+    },
+    "lib": [
+      "es2019",
+      "dom",
+      "dom.iterable"
+    ]
+  },
 }

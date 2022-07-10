@@ -1,8 +1,13 @@
 import './Header.scss';
+import Menu from '@components/menus/Menu/Menu';
 
-function Header(props: { test: { name: string } }) {
+function Header() {
     return (
-        <div className="header">Header!!</div>
+        <header className="header mb-5">
+          <div className="container">
+            <Menu />
+          </div>
+        </header>
     )
 }
 
