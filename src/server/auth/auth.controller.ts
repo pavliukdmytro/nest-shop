@@ -1,7 +1,8 @@
-import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
+import { ValidationPipe } from '../pipes/Validation.pipe';
 
 interface Ret {
   status: boolean;

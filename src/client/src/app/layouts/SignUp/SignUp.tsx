@@ -2,7 +2,7 @@ import { FormEvent, useState }  from 'react';
 import axios  from 'axios';
 
 const SignUp = () => {
-  let [errors, setErrors] = useState([]);
+  let [errors, setErrors] = useState({});
 
   const handlerSubmit = async (e: FormEvent<HTMLFormElement>) :Promise<void>  => {
     try {
@@ -13,32 +13,34 @@ const SignUp = () => {
 
       const { data, status } = await axios.post('/auth/signUp', formData);
 
-      // if (status !== 200) throw new Error(data);
-
-      setErrors([]);
-      console.log(data);
+      setErrors({});
     } catch(err) {
-      console.log(err);
-      setErrors(err.response.data.message);
+      setErrors(err.response.data);
     }
   };
 
-  const printErrors = () => {
-    return (
-      <div className="mb-3">
-        { errors.map(err => <p className="text-danger mb-1" key={ err }>{err}</p>) }
-      </div>
-    )
+  const printErrors = (inputName: string) => {
+    // console.log(inputName, errors);
+    if (inputName in errors) {
+      return (
+        <div className="mb-3">
+          {
+            // @ts-ignore
+            Object.values(errors[ inputName ]).map((err: string) => {
+            return (
+              <p className="text-danger mb-1" key={ err }>{err}</p>
+            )
+          }) }
+        </div>
+      )
+    }
   }
 
   return(
     <div className="container">
       <div className="row">
-        <div className="col-md-6 offset-md-3">
+        <div className="col-lg-8 offset-lg-2">
           <h1 className="mb-5">Sign up</h1>
-          {
-            errors.length ? printErrors() : ''
-          }
           <form
             onSubmit={ handlerSubmit }
           >
@@ -50,6 +52,7 @@ const SignUp = () => {
                 className="form-control"
                 id="inputName"
               />
+              { printErrors('name') }
             </div>
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
@@ -60,6 +63,7 @@ const SignUp = () => {
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
               />
+              { printErrors('email') }
               <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
             </div>
             <div className="mb-3">
@@ -70,6 +74,7 @@ const SignUp = () => {
                 className="form-control"
                 id="exampleInputPassword1"
               />
+              { printErrors('password') }
             </div>
             {/*<div className="mb-3 form-check">*/}
             {/*  <input type="checkbox" className="form-check-input" id="exampleCheck1" />*/}
