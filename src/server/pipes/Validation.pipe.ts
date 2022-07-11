@@ -17,7 +17,7 @@ export class ValidationPipe implements PipeTransform<any> {
     });
 
     if (errors.length > 0) {
-      throw new BadRequestException(ErrorsObject);
+      throw new BadRequestException({ status: false, errors: ErrorsObject });
     }
     return value;
   }

@@ -9,7 +9,7 @@ services:
       - 9229:9229
     environment:
       - SERVER_PORT=3000
-      - CONNECTIONSTRING=mongodb://mongo:27017
+      - CONNECTIONSTRING=mongodb://mongo:27017/nest-shop
     volumes:
       - ./:/app
       - /app/node_modules

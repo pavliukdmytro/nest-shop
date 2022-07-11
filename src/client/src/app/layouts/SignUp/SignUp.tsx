@@ -13,14 +13,19 @@ const SignUp = () => {
 
       const { data, status } = await axios.post('/auth/signUp', formData);
 
-      setErrors({});
+      if (!data.status) {
+        setErrors(data.errors);
+        console.log(errors);
+      } else {
+        setErrors({});
+      }
+
     } catch(err) {
-      setErrors(err.response.data);
+      setErrors(err?.response?.data?.errors ?? {  });
     }
   };
 
   const printErrors = (inputName: string) => {
-    // console.log(inputName, errors);
     if (inputName in errors) {
       return (
         <div className="mb-3">
@@ -75,6 +80,24 @@ const SignUp = () => {
                 id="exampleInputPassword1"
               />
               { printErrors('password') }
+            </div>
+            <div className="row mb-3">
+              <div className="col-6">
+                <div className="form-check">
+                  <label className="form-check-label">
+                    <input className="form-check-input" type="radio" name="gender" value="male" defaultChecked/>
+                    male
+                  </label>
+                </div>
+              </div>
+              <div className="col-6">
+                <div className="form-check">
+                  <label className="form-check-label">
+                    <input className="form-check-input" value="female" type="radio" name="gender" />
+                    female
+                  </label>
+                </div>
+              </div>
             </div>
             {/*<div className="mb-3 form-check">*/}
             {/*  <input type="checkbox" className="form-check-input" id="exampleCheck1" />*/}

@@ -3,10 +3,7 @@ import { FormDataRequest } from 'nestjs-form-data';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { ValidationPipe } from '../pipes/Validation.pipe';
-
-interface Ret {
-  status: boolean;
-}
+import { ResponseDto } from '../dto/response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,8 +13,7 @@ export class AuthController {
   @FormDataRequest()
   async signUp(
     @Body(new ValidationPipe()) createUserDto: CreateUserDto,
-  ): Promise<Ret> {
-    await this.authService.signUp(createUserDto);
-    return { status: true };
+  ): Promise<ResponseDto> {
+    return await this.authService.signUp(createUserDto);
   }
 }
