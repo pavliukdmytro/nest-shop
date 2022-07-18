@@ -3,8 +3,10 @@ import {
   MinLength,
   MaxLength,
   IsString,
-  IsEnum
+  IsEnum,
 } from 'class-validator';
+
+// import { StatusEnum } from '../enums/status.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -18,5 +20,6 @@ export class CreateUserDto {
   readonly avatar: string;
   @IsEnum(['male', 'female'])
   readonly gender: string;
-  // readonly role: string[];
+  // @IsEnum(Object.values(StatusEnum))
+  // readonly status: string;
 }

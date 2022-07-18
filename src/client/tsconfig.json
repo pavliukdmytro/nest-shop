@@ -10,7 +10,8 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/app/components/*"]
+      "@components/*": ["src/app/components/*"],
+      "@store/*": ["src/app/store/*"]
     },
     "lib": [
       "es2019",

@@ -1,24 +1,23 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const fs = require('fs');
+// const fs = require('fs');
 
-function getAllHbsRootFiles() {
-    const files = fs.readdirSync('./src/views/').filter(file => file.match(/.hbs$/));
-
-    return files.map(file => {
-        return new HtmlWebpackPlugin({
-                    template: `./src/views/${file}`,
-                    filename: `./${ file.replace('.hbs', '.html') }`,
-                    // templateParameters: require('./src/data/index.json'),
-                    minify: false,
-                    inject: false,
-                })
-
-    })
-}
+// function getAllHbsRootFiles() {
+//     const files = fs.readdirSync('./src/views/').filter(file => file.match(/.hbs$/));
+//
+//     return files.map(file => {
+//         return new HtmlWebpackPlugin({
+//                     template: `./src/views/${file}`,
+//                     filename: `./${ file.replace('.hbs', '.html') }`,
+//                     // templateParameters: require('./src/data/index.json'),
+//                     minify: false,
+//                     inject: false,
+//                 })
+//
+//     })
+// }
 
 /** общий файл настроек **/
 
@@ -99,7 +98,8 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.jsx'],
         alias: {
-            '@components': path.join(__dirname, 'src/app/components')
+            '@components': path.join(__dirname, 'src/app/components'),
+            '@store': path.join(__dirname, 'src/app/store')
         }
     }
 };

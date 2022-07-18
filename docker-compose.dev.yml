@@ -5,11 +5,10 @@ services:
     build:
       context: .
     ports:
-      - 8000:3000
+      - 3000:3000
       - 9229:9229
-    environment:
-      - SERVER_PORT=3000
-      - CONNECTIONSTRING=mongodb://mongo:27017/nest-shop
+    env_file:
+      - .env.development
     volumes:
       - ./:/app
       - /app/node_modules

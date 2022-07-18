@@ -1,8 +1,14 @@
 import { FormEvent, useState }  from 'react';
 import axios  from 'axios';
 
+import { useAppSelector, useAppDispatch } from '@store/hooks';
+import { setStore } from '@store/features/auth/auth';
+
 const SignUp = () => {
   let [errors, setErrors] = useState({});
+
+  const auth = useAppSelector(state => state.auth.data);
+  const dispatch = useAppDispatch();
 
   const handlerSubmit = async (e: FormEvent<HTMLFormElement>) :Promise<void>  => {
     try {
@@ -11,13 +17,13 @@ const SignUp = () => {
       const form = e.currentTarget;
       const formData = new FormData(form);
 
-      const { data, status } = await axios.post('/auth/signUp', formData);
+      const { data } = await axios.post('/auth/sign-up', formData);
 
-      if (!data.status) {
+      if (!data.isOk) {
         setErrors(data.errors);
-        console.log(errors);
       } else {
         setErrors({});
+        dispatch(setStore(data.responseData));
       }
 
     } catch(err) {
@@ -45,6 +51,7 @@ const SignUp = () => {
     <div className="container">
       <div className="row">
         <div className="col-lg-8 offset-lg-2">
+          { auth?.access_token }
           <h1 className="mb-5">Sign up</h1>
           <form
             onSubmit={ handlerSubmit }

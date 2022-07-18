@@ -5,12 +5,11 @@ import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 
-console.log(process.env.CONNECTIONSTRING);
 @Module({
   imports: [
+    MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING),
     AuthModule,
     UserModule,
-    MongooseModule.forRoot(process.env.CONNECTIONSTRING),
   ],
   controllers: [AppController],
   providers: [],
