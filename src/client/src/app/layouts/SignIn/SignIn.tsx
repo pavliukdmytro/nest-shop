@@ -1,16 +1,13 @@
 import { FormEvent, useState }  from 'react';
 import axios from 'axios';
 
-import { useAppSelector, useAppDispatch } from '@store/hooks';
+import { useAppDispatch } from '@store/hooks';
 import { setStore } from '@store/features/auth/auth';
 
 const SignIn = () => {
   let [errors, setErrors] = useState({});
 
-  const auth = useAppSelector(state => state.auth.data);
   const dispatch = useAppDispatch();
-
-  // console.log(jwtData);
 
   const printErrors = (inputName: string) => {
     if (inputName in errors) {
@@ -31,6 +28,7 @@ const SignIn = () => {
   const handlerSubmit = async (e: FormEvent) => {
     try {
       e.preventDefault();
+      // alert('prevent');
       const target = e.target as HTMLFormElement;
       const formData = new FormData(target);
 
@@ -51,7 +49,6 @@ const SignIn = () => {
     <div className="container">
       <div className="row">
         <div className="col-lg-8 offset-lg-2">
-          { auth?.access_token }
           <h1 className="mb-5">Sign in</h1>
           { printErrors('auth') }
           <form

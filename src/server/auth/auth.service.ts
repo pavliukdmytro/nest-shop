@@ -20,7 +20,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
   async compareHash(password: string, hashPassword: string): Promise<boolean> {
-    return await bcrypt.compare(password, hashPassword);
+    return bcrypt.compare(password, hashPassword);
   }
   async signUp(createUserDto: CreateUserDto): Promise<ResponseDto> {
     try {
