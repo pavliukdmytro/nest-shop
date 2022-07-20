@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { EmailModule } from './email/email.module';
+import { SpaModule } from './spa/spa.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { EmailModule } from './email/email.module';
     AuthModule,
     UserModule,
     EmailModule,
+    SpaModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -1,6 +1,15 @@
+interface IErros {
+  [propName: string]: any;
+}
+interface IMessages {
+  [propName: string]: any;
+}
+interface IResponseData {
+  [propName: string]: any;
+}
 export class ResponseDto {
   readonly isOk: boolean;
-  readonly messages?: object;
-  readonly errors?: object;
-  readonly responseData?: object;
+  readonly messages?: IMessages;
+  readonly errors?: IErros;
+  readonly responseData?: IResponseData;
 }

@@ -20,7 +20,7 @@ export class UserService {
   async createUser(
     createUserDto: CreateUserDto,
     roles: string[],
-  ): Promise<IUser> {
+  ): Promise<UserDocument> {
     return await this.userModel.create({
       ...createUserDto,
       password: await this.hashPassword(createUserDto.password),
@@ -30,5 +30,8 @@ export class UserService {
   }
   async findByEmail(email: string): Promise<IUser> {
     return this.userModel.findOne({ email });
+  }
+  async updateUser(search: any, params: any) {
+    return await this.userModel.findOneAndUpdate(search, params);
   }
 }

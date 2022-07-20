@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Render } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -23,5 +23,10 @@ export class AuthController {
   @FormDataRequest()
   async signIn(@Body(new ValidationPipe()) signInDto: SignInDto): Promise<any> {
     return await this.authService.signIn(signInDto);
+  }
+  @Get('/verify/:token')
+  @Render('confirm-email')
+  async verifyEmail(@Param('token') token): Promise<any> {
+    return await this.authService.verifyUser(token);
   }
 }
