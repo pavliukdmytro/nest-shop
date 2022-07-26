@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -10,32 +9,36 @@ import { SignInDto } from './dto/signIn.dto';
 import { IUser } from '../user/interfaces/user.interface';
 import { EmailService } from '../email/email.service';
 import { UserDocument } from '../user/schemas/user.schema';
+import { TokenService } from '../token/token.service';
+import { TokenDocument } from '../token/schemas/token.schema';
 
 interface IAccessToken {
-  access_token: string;
+  accessToken: string;
 }
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private jwtService: JwtService,
-    private readonly emailService: EmailService
+    private readonly tokenService: TokenService,
+    private readonly emailService: EmailService,
   ) {}
   async compareHash(password: string, hashPassword: string): Promise<boolean> {
     return bcrypt.compare(password, hashPassword);
   }
   async signUp(createUserDto: CreateUserDto): Promise<ResponseDto> {
     try {
-      const user: UserDocument = await this.userService.createUser(createUserDto, [
-        RoleEnum.user,
-      ]);
-      const token = this.signUser(user);
+      const user: UserDocument = await this.userService.createUser(
+        createUserDto,
+        [RoleEnum.user],
+      );
+
+      const { accessToken } = await this.signUser(user);
       this.emailService.sendEmail(
         user.email,
         'verify your email',
         `<p>fallow this link
-                <a href="http://localhost:3000/auth/verify/${token.responseData.access_token}">website</a>
+                <a href="http://localhost:3000/auth/verify/${accessToken}">website</a>
                 </p>`,
       );
       return {
@@ -58,7 +61,7 @@ export class AuthService {
   async signIn({
     email,
     password,
-  }: SignInDto): Promise<IAccessToken | ResponseDto> {
+  }: SignInDto): Promise<TokenDocument | ResponseDto> {
     const user: IUser | null = await this.validateUser({ email, password });
     const error: ResponseDto = {
       isOk: false,
@@ -73,7 +76,7 @@ export class AuthService {
       return error;
     }
 
-    return this.signUser(user);
+    return await this.signUser(user);
   }
   async validateUser({ email, password }: SignInDto): Promise<IUser | null> {
     const user: IUser | null = await this.userService.findByEmail(email);
@@ -85,22 +88,15 @@ export class AuthService {
     if (!isPasswordValid) return null;
     return user;
   }
-  signUser(user) {
+  async signUser(user): Promise<TokenDocument> {
     delete user._doc.password;
     user._doc.sub = user.id;
-    return {
-      isOk: true,
-      responseData: {
-        access_token: this.jwtService.sign(user._doc),
-      },
-    };
+    return await this.tokenService.createToken(user._doc, user.id);
   }
-  decodeJwt(token: string): any {
-    return this.jwtService.decode(token);
-  }
+
   async verifyUser(token: string): Promise<ResponseDto> {
     try {
-      const parsedToken: any = this.decodeJwt(token);
+      const parsedToken: any = this.tokenService.decodeToken(token);
       await this.userService.updateUser(
         { email: parsedToken.email },
         { status: 'active' },

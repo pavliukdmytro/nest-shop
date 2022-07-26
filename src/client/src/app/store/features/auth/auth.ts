@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { AppDispatch } from '@store/store';
 
 // Define a type for the slice state
 interface IAuthState {
   data: {
-    access_token?: string | undefined;
+    accessToken?: string;
   }
 }
 
 // Define the initial state using that type
 const initialState: IAuthState = {
-  data: {
-
-  }
+  data: {}
 }
 
 export const authSlice = createSlice({
@@ -30,7 +30,8 @@ export const authSlice = createSlice({
 export const { setStore } = authSlice.actions;
 
 export const userData = (state: any): any => {
-  const token = state?.auth?.data?.access_token;
+  const token = state?.auth?.data?.accessToken;
+
   if (token) {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -41,5 +42,13 @@ export const userData = (state: any): any => {
   }
   return null;
 };
+
+export const checkUserData = () => async (dispatch: AppDispatch) => {
+    const { status, data } = await axios.post('/token/refresh');
+
+    if (status === 201) {
+      dispatch(setStore({ accessToken: data.accessToken }));
+    }
+}
 
 export default authSlice.reducer;

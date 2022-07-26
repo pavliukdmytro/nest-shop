@@ -13,7 +13,7 @@ import { store } from '@store/store';
 import App from './app/App';
 
 axios.interceptors.request.use(function (config) {
-  const token = store.getState().auth.data.access_token;
+  const token = store.getState().auth.data.accessToken;
   if (token) {
     config.headers.Authorization = token;
   }

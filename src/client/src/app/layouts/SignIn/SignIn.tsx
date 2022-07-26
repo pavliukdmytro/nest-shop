@@ -38,7 +38,7 @@ const SignIn = () => {
         setErrors(data.errors);
       } else {
         setErrors({});
-        dispatch(setStore(data.responseData));
+        dispatch(setStore(data));
       }
     } catch(err) {
       setErrors(err?.response?.data?.errors ?? {  });

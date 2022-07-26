@@ -1,14 +1,14 @@
 import { FormEvent, useState }  from 'react';
 import axios  from 'axios';
 
-import { useAppSelector, useAppDispatch } from '@store/hooks';
-import { setStore } from '@store/features/auth/auth';
+import { useAppSelector } from '@store/hooks';
+import { IMessages } from './interfaces/IMessages';
 
 const SignUp = () => {
   let [errors, setErrors] = useState({});
+  let [messages, setMessages] = useState<IMessages>({});
 
   const auth = useAppSelector(state => state.auth.data);
-  const dispatch = useAppDispatch();
 
   const handlerSubmit = async (e: FormEvent<HTMLFormElement>) :Promise<void>  => {
     try {
@@ -23,7 +23,7 @@ const SignUp = () => {
         setErrors(data.errors);
       } else {
         setErrors({});
-        dispatch(setStore(data.responseData));
+        setMessages(data.messages);
       }
 
     } catch(err) {
@@ -51,8 +51,9 @@ const SignUp = () => {
     <div className="container">
       <div className="row">
         <div className="col-lg-8 offset-lg-2">
-          { auth?.access_token }
           <h1 className="mb-5">Sign up</h1>
+          { messages.verify && <p className="text-success">{ messages.verify }</p>}
+
           <form
             onSubmit={ handlerSubmit }
           >
