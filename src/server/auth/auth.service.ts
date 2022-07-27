@@ -93,7 +93,6 @@ export class AuthService {
     user._doc.sub = user.id;
     return await this.tokenService.createToken(user._doc, user.id);
   }
-
   async verifyUser(token: string): Promise<ResponseDto> {
     try {
       const parsedToken: any = this.tokenService.decodeToken(token);
@@ -104,7 +103,7 @@ export class AuthService {
       return {
         isOk: true,
         messages: {
-          verify: 'your email has confirmed',
+          verify: 'Your email has confirmed, please sign in.',
         },
       };
     } catch (err) {
@@ -115,5 +114,8 @@ export class AuthService {
         },
       };
     }
+  }
+  async logOut(refreshToken: string): Promise<any> {
+    return await this.tokenService.removeToken(refreshToken);
   }
 }

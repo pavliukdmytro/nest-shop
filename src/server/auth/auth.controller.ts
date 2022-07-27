@@ -1,6 +1,15 @@
-import { Controller, Post, Body, Get, Param, Render, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Render,
+  Res,
+  Req,
+} from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -44,5 +53,25 @@ export class AuthController {
   @Render('confirm-email')
   async verifyEmail(@Param('token') token): Promise<any> {
     return await this.authService.verifyUser(token);
+  }
+  @Get('/logout')
+  async logOut(@Req() request: Request): Promise<any> {
+    try {
+      const refreshToken = request.cookies.refreshToken;
+      if (refreshToken) {
+        await this.authService.logOut(refreshToken);
+        return {
+          isOk: true,
+        };
+      }
+      return {
+        isOk: false,
+      };
+    } catch (err) {
+      console.error(err);
+      return {
+        isOk: false,
+      };
+    }
   }
 }

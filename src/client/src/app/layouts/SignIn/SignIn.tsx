@@ -1,4 +1,5 @@
 import { FormEvent, useState }  from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { useAppDispatch } from '@store/hooks';
@@ -8,6 +9,7 @@ const SignIn = () => {
   let [errors, setErrors] = useState({});
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const printErrors = (inputName: string) => {
     if (inputName in errors) {
@@ -39,6 +41,7 @@ const SignIn = () => {
       } else {
         setErrors({});
         dispatch(setStore(data));
+        navigate('/', { replace: true });
       }
     } catch(err) {
       setErrors(err?.response?.data?.errors ?? {  });

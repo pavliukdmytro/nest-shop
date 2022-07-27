@@ -13,7 +13,6 @@ export class TokenService {
     @InjectModel(Token.name) private readonly tokenModel: Model<TokenDocument>,
   ) {}
   async createToken(data: any, userId: Types.ObjectId): Promise<TokenDocument> {
-    // console.log(data);
     return await this.tokenModel.create({
       refreshToken: uuid(),
       accessToken: this.jwtService.sign(data),
@@ -23,18 +22,21 @@ export class TokenService {
   decodeToken(token: string): any {
     return this.jwtService.decode(token);
   }
-  async updateToken(refreshToken): Promise<TokenDocument | null> {
+  async updateToken(refreshToken: string): Promise<TokenDocument | null> {
     try {
       const tokenData: TokenDocument = await this.tokenModel
         .findOneAndDelete({ refreshToken })
         .populate('userId', '-password');
-      const tokenObject: IToken = tokenData.toObject();
-      if (tokenData) {
+      const tokenObject: IToken = tokenData?.toObject();
+      if (tokenObject) {
         return this.createToken(tokenObject.userId, tokenData.userId._id);
       }
       return null;
     } catch (err) {
       console.error(err);
     }
+  }
+  async removeToken(refreshToken: string): Promise<any> {
+    return this.tokenModel.findOneAndDelete({ refreshToken });
   }
 }

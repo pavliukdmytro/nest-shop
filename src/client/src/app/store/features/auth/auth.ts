@@ -6,12 +6,15 @@ import { AppDispatch } from '@store/store';
 interface IAuthState {
   data: {
     accessToken?: string;
+    isLoad: boolean;
   }
 }
 
 // Define the initial state using that type
 const initialState: IAuthState = {
-  data: {}
+  data: {
+    isLoad: false,
+  }
 }
 
 export const authSlice = createSlice({
@@ -43,12 +46,37 @@ export const userData = (state: any): any => {
   return null;
 };
 
-export const checkUserData = () => async (dispatch: AppDispatch) => {
-    const { status, data } = await axios.post('/token/refresh');
+export const checkUserData = () => async (dispatch: AppDispatch): Promise<void> => {
+    try {
+      const { status, data } = await axios.post('/token/refresh');
 
-    if (status === 201) {
-      dispatch(setStore({ accessToken: data.accessToken }));
+      if (status === 201) {
+        dispatch(setStore({
+          accessToken: data.accessToken,
+          isLoad: true,
+        }));
+      }
+    } catch (err) {
+      if (err.response.status === 401) {
+        dispatch(setStore({
+          accessToken: null,
+          isLoad: true,
+        }));
+      } else {
+        console.error(err);
+      }
     }
+};
+
+export const logOut = () => async (dispatch: AppDispatch) => {
+  try {
+    const { status, data } = await axios.get('/auth/logout');
+    if (status === 200) {
+      dispatch(setStore({ accessToken: null }));
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export default authSlice.reducer;
