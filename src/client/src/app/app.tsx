@@ -1,21 +1,24 @@
 import { Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
-// import { useSelector } from 'react-redux';
+
 
 import { checkUserData } from './store/features/auth/auth';
-import { useAppSelector, useAppDispatch } from './store/hooks';
+import { useAppDispatch, useAppSelector } from './store/hooks';
 import Main from './layouts/Main';
 import SignUp from './layouts/SignUp/SignUp';
 import Header from './components/Header/Header';
 import SignIn from './layouts/SignIn/SignIn';
+import DefLoader from '@components/def/DefLoader';
 
 const App = () => {
-  const state = useAppSelector(state => state);
   const dispatch = useAppDispatch();
-
+  const isLoad: boolean = useAppSelector(state => state.auth.data.isLoad);
   useEffect(() => {
     dispatch(checkUserData());
   }, []);
+  if (!isLoad) {
+    return <DefLoader />;
+  }
   return (
     <div>
       <Header />
