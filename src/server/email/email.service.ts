@@ -26,12 +26,10 @@ export class EmailService {
 
     const mailOptions = {
       from: process.env.EMAIL_STRING,
-      subject: 'Sending Email using Node.js',
+      subject,
       html,
       to,
     };
-
-    // console.log(mailOptions);
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {

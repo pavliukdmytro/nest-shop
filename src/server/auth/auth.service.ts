@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { UserService } from '../user/user.service';
@@ -11,6 +11,7 @@ import { EmailService } from '../email/email.service';
 import { UserDocument } from '../user/schemas/user.schema';
 import { TokenService } from '../token/token.service';
 import { TokenDocument } from '../token/schemas/token.schema';
+import * as process from 'process';
 
 interface IAccessToken {
   accessToken: string;
@@ -117,5 +118,33 @@ export class AuthService {
   }
   async logOut(refreshToken: string): Promise<any> {
     return await this.tokenService.removeToken(refreshToken);
+  }
+  async forgotPassword(email: string): Promise<ResponseDto> {
+    const userData = await this.userService.findByEmail(email);
+    if (!userData) {
+      throw new BadRequestException({
+        isOk: false,
+        errors: {
+          email: {
+            empty: 'email isn`t present',
+          },
+        },
+      });
+    }
+    const { SERVER_HOST_STRING, SERVER_PORT } = process.env;
+    const token: string = this.tokenService.signData(userData.toObject());
+    this.emailService.sendEmail(
+      email,
+      'follow the link to update your password',
+      `<a href="${SERVER_HOST_STRING}:${SERVER_PORT}/auth/change-password/${token}">
+                follow the link to update your password
+              </a>`,
+    );
+    return {
+      isOk: true,
+      messages: {
+        email: 'visit your email',
+      },
+    };
   }
 }

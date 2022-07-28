@@ -1,14 +1,12 @@
 import { FormEvent, useState }  from 'react';
 import axios  from 'axios';
 
-import { useAppSelector } from '@store/hooks';
 import { IMessages } from './interfaces/IMessages';
+import DefErrors from '@components/def/DefErrors/DefErrors';
 
 const SignUp = () => {
   let [errors, setErrors] = useState({});
   let [messages, setMessages] = useState<IMessages>({});
-
-  const auth = useAppSelector(state => state.auth.data);
 
   const handlerSubmit = async (e: FormEvent<HTMLFormElement>) :Promise<void>  => {
     try {
@@ -31,22 +29,6 @@ const SignUp = () => {
     }
   };
 
-  const printErrors = (inputName: string) => {
-    if (inputName in errors) {
-      return (
-        <div className="mb-3">
-          {
-            // @ts-ignore
-            Object.values(errors[ inputName ]).map((err: string) => {
-            return (
-              <p className="text-danger mb-1" key={ err }>{err}</p>
-            )
-          }) }
-        </div>
-      )
-    }
-  }
-
   return(
     <div className="container">
       <div className="row">
@@ -65,7 +47,7 @@ const SignUp = () => {
                 className="form-control"
                 id="inputName"
               />
-              { printErrors('name') }
+              <DefErrors name="name" errors={ errors } />
             </div>
             <div className="mb-3">
               <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
@@ -76,7 +58,7 @@ const SignUp = () => {
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
               />
-              { printErrors('email') }
+              <DefErrors name="email" errors={ errors } />
               <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
             </div>
             <div className="mb-3">
@@ -87,7 +69,7 @@ const SignUp = () => {
                 className="form-control"
                 id="exampleInputPassword1"
               />
-              { printErrors('password') }
+              <DefErrors name="password" errors={ errors } />
             </div>
             <div className="row mb-3">
               <div className="col-6">

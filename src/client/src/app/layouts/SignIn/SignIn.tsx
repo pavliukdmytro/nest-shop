@@ -1,5 +1,5 @@
 import { FormEvent, useState }  from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 import { useAppDispatch } from '@store/hooks';
@@ -36,7 +36,7 @@ const SignIn = () => {
 
       const { data } = await axios.post('/auth/sign-in', formData);
 
-      if (!data.status && data.errors) {
+      if (!data.isOk && data.errors) {
         setErrors(data.errors);
       } else {
         setErrors({});
@@ -69,6 +69,7 @@ const SignIn = () => {
               <input type="password" name="password" className="form-control" id="exampleInputPassword1" />
               { printErrors('password') }
             </div>
+            <Link to="/auth/forgot" className="d-block mb-3">forgot password?</Link>
             <button type="submit" className="btn btn-primary">Submit</button>
           </form>
         </div>

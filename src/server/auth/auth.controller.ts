@@ -7,6 +7,8 @@ import {
   Render,
   Res,
   Req,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Response, Request } from 'express';
@@ -16,6 +18,7 @@ import { AuthService } from './auth.service';
 import { ValidationPipe } from '../pipes/Validation.pipe';
 import { ResponseDto } from '../dto/response.dto';
 import { SignInDto } from './dto/signIn.dto';
+import { ForgotDto } from './dto/forgot.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -73,5 +76,13 @@ export class AuthController {
         isOk: false,
       };
     }
+  }
+  @Post('/forgot')
+  @FormDataRequest()
+  @HttpCode(200)
+  async forgotPassword(
+    @Body(new ValidationPipe()) forgotDto: ForgotDto,
+  ): Promise<ResponseDto> {
+    return await this.authService.forgotPassword(forgotDto.email);
   }
 }

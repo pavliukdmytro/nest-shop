@@ -15,9 +15,12 @@ export class TokenService {
   async createToken(data: any, userId: Types.ObjectId): Promise<TokenDocument> {
     return await this.tokenModel.create({
       refreshToken: uuid(),
-      accessToken: this.jwtService.sign(data),
+      accessToken: this.signData(data),
       userId,
     });
+  }
+  signData(data): string {
+    return this.jwtService.sign(data);
   }
   decodeToken(token: string): any {
     return this.jwtService.decode(token);

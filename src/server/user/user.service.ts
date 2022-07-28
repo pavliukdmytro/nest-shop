@@ -29,7 +29,7 @@ export class UserService {
     });
   }
   async findByEmail(email: string): Promise<IUser> {
-    return this.userModel.findOne({ email });
+    return await this.userModel.findOne({ email }, '-password');
   }
   async updateUser(search: any, params: any) {
     return await this.userModel.findOneAndUpdate(search, params);
