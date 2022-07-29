@@ -28,8 +28,8 @@ export class UserService {
       roles,
     });
   }
-  async findByEmail(email: string): Promise<IUser> {
-    return await this.userModel.findOne({ email }, '-password');
+  async findByEmail(email: string, options?: string): Promise<IUser> {
+    return await this.userModel.findOne({ email }, options);
   }
   async updateUser(search: any, params: any) {
     return await this.userModel.findOneAndUpdate(search, params);

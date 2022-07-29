@@ -7,7 +7,6 @@ import {
   Render,
   Res,
   Req,
-  HttpStatus,
   HttpCode,
 } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
@@ -19,6 +18,8 @@ import { ValidationPipe } from '../pipes/Validation.pipe';
 import { ResponseDto } from '../dto/response.dto';
 import { SignInDto } from './dto/signIn.dto';
 import { ForgotDto } from './dto/forgot.dto';
+import { TokenResponseDto } from './dto/tokenResponse.dto';
+import { TokenDocument } from '../token/schemas/token.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -36,21 +37,17 @@ export class AuthController {
   @FormDataRequest()
   async signIn(
     @Body(new ValidationPipe()) signInDto: SignInDto,
-    @Res() response: Response,
-  ): Promise<void> {
-    const tokenData = await this.authService.signIn(signInDto);
-    if ('refreshToken' in tokenData && 'accessToken' in tokenData) {
-      response.cookie('refreshToken', tokenData.refreshToken, {
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        httpOnly: true,
-      });
-      response.json({
-        isOk: true,
-        accessToken: tokenData.accessToken,
-      });
-    } else {
-      response.json(tokenData);
-    }
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<TokenResponseDto> {
+    const tokenData: TokenDocument = await this.authService.signIn(signInDto);
+    response.cookie('refreshToken', tokenData.refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      httpOnly: true,
+    });
+    return {
+      isOk: true,
+      accessToken: tokenData.accessToken,
+    };
   }
   @Get('/verify/:token')
   @Render('confirm-email')

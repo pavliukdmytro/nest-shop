@@ -11,11 +11,6 @@ import { EmailService } from '../email/email.service';
 import { UserDocument } from '../user/schemas/user.schema';
 import { TokenService } from '../token/token.service';
 import { TokenDocument } from '../token/schemas/token.schema';
-import * as process from 'process';
-
-interface IAccessToken {
-  accessToken: string;
-}
 
 @Injectable()
 export class AuthService {
@@ -59,10 +54,7 @@ export class AuthService {
       };
     }
   }
-  async signIn({
-    email,
-    password,
-  }: SignInDto): Promise<TokenDocument | ResponseDto> {
+  async signIn({ email, password }: SignInDto): Promise<TokenDocument> {
     const user: IUser | null = await this.validateUser({ email, password });
     const error: ResponseDto = {
       isOk: false,
@@ -70,11 +62,13 @@ export class AuthService {
         auth: { one: 'wrong login or password' },
       },
     };
-    if (!user) return error;
+    if (!user) {
+      throw new BadRequestException(error);
+    }
 
     if (user.status === 'pending') {
       error.errors.auth.one = 'please visit your email and fallow to the link';
-      return error;
+      throw new BadRequestException(error);
     }
 
     return await this.signUser(user);
@@ -120,7 +114,7 @@ export class AuthService {
     return await this.tokenService.removeToken(refreshToken);
   }
   async forgotPassword(email: string): Promise<ResponseDto> {
-    const userData = await this.userService.findByEmail(email);
+    const userData = await this.userService.findByEmail(email, '-password');
     if (!userData) {
       throw new BadRequestException({
         isOk: false,
