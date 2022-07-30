@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { isJwtExpired } from 'jwt-check-expiration';
 
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -11,6 +12,7 @@ import { EmailService } from '../email/email.service';
 import { UserDocument } from '../user/schemas/user.schema';
 import { TokenService } from '../token/token.service';
 import { TokenDocument } from '../token/schemas/token.schema';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -140,5 +142,49 @@ export class AuthService {
         email: 'visit your email',
       },
     };
+  }
+  async changePassword(
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<UserDocument> {
+    const { password, confirmPassword, token } = changePasswordDto;
+    if (password !== confirmPassword) {
+      throw new BadRequestException({
+        isOk: false,
+        errors: {
+          password: {
+            notMatch: 'password not match',
+          },
+          confirmPassword: {
+            notMatch: 'password not match',
+          },
+        },
+      });
+    }
+    const { email } = this.tokenService.decodeToken(token);
+    const hashedPassword = await this.userService.hashPassword(password);
+    if (isJwtExpired(token)) {
+      throw new BadRequestException({
+        isOk: false,
+        errors: {
+          token: {
+            expired: 'Time has passed, resend email again',
+          },
+        },
+      });
+    }
+    const result = await this.userService.findByEmailAndUpdate(email, {
+      password: hashedPassword,
+    });
+    if (!result) {
+      throw new BadRequestException({
+        isOk: false,
+        errors: {
+          token: {
+            user: `user isn\'t present`,
+          },
+        },
+      });
+    }
+    return result;
   }
 }

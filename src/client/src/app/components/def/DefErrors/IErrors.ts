@@ -1,4 +1,6 @@
 export interface IErrors {
-  errors: Object;
+  errors?: {
+    [name: string]: any
+  };
   name: string;
 }

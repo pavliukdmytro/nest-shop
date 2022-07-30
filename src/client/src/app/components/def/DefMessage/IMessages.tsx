@@ -1,4 +1,6 @@
 export interface IMessages{
-  messages: any;
+  messages: {
+    [name: string]: string;
+  };
   name: string;
 }

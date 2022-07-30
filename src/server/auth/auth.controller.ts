@@ -8,9 +8,11 @@ import {
   Res,
   Req,
   HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 import { Response, Request } from 'express';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -76,10 +78,23 @@ export class AuthController {
   }
   @Post('/forgot')
   @FormDataRequest()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async forgotPassword(
     @Body(new ValidationPipe()) forgotDto: ForgotDto,
   ): Promise<ResponseDto> {
     return await this.authService.forgotPassword(forgotDto.email);
+  }
+  @Post('change-password')
+  @FormDataRequest()
+  async changePassword(
+    @Body(new ValidationPipe()) changePasswordDto: ChangePasswordDto,
+  ): Promise<ResponseDto> {
+    await this.authService.changePassword(changePasswordDto);
+    return {
+      isOk: true,
+      messages: {
+        ok: 'password was update',
+      },
+    };
   }
 }
